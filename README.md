@@ -5,7 +5,7 @@ This is the 3626 branch of the Chromium Embedded Framework (CEF) patched with th
 
 We re-added some old command line arguments that were deprecated and removed in Feb 2019.
 
-How to pass the GPU correct to CEF with these binaries: You need to inject the command line options into the render process. 
+How to pass the GPU id correctly to CEF with these binaries: You need to inject the command line options into the render process. 
 
 The options are:
 `--gpu-vendor-id=<GPU VENDOR ID> --gpu-device-id=<GPU DEVICE ID>`

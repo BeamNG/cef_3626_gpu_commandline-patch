@@ -17,8 +17,8 @@ for example:
 
 Integration example using `OnBeforeChildProcessLaunch`:
 ```c++
-extern uint32_t g_gpu_device_id; // fill this variable 
-extern uint32_t g_gpu_vendor_id;
+uint32_t g_gpu_device_id; // fill these variables
+uint32_t g_gpu_vendor_id;
 void CefApp::OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) {
     if (command_line->HasSwitch("type")) {
         if (command_line->GetSwitchValue("type") == "gpu-process") {
@@ -37,7 +37,7 @@ void initGPUDX10MockupExample() {
 	DXGI_ADAPTER_DESC1 desc;
 	EnumAdapter->GetDesc1(&desc);
 	// ...
-	g_gpu_device_id desc.DeviceId;
+	g_gpu_device_id = desc.DeviceId;
 	g_gpu_vendor_id = desc.VendorId;
 	// ...
 }

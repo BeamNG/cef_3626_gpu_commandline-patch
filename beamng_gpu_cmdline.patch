@@ -1,0 +1,87 @@
+diff -ru gpu/config/gpu_switches.cc gpu/config/gpu_switches.cc
+--- gpu/config/gpu_switches.cc	Sun May 05 13:03:59 2019
++++ gpu/config/gpu_switches.cc	Mon May 06 17:48:13 2019
+@@ -55,4 +55,10 @@
+ 
+ const char kEnableUnsafeWebGPU[] = "enable-unsafe-webgpu";
+ 
++// Passes gpu device_id from browser process to GPU process.
++const char kGpuDeviceID[] = "gpu-device-id";
++
++// Passes gpu vendor_id from browser process to GPU process.
++const char kGpuVendorID[] = "gpu-vendor-id";
++
+ }  // namespace switches
+diff -ru gpu/config/gpu_switches.h gpu/config/gpu_switches.h
+--- gpu/config/gpu_switches.h	Sun May 05 13:03:59 2019
++++ gpu/config/gpu_switches.h	Mon May 06 17:48:31 2019
+@@ -22,6 +22,8 @@
+ GPU_EXPORT extern const char kWebglMSAASampleCount[];
+ GPU_EXPORT extern const char kDisableGpuProcessForDX12VulkanInfoCollection[];
+ GPU_EXPORT extern const char kEnableUnsafeWebGPU[];
++GPU_EXPORT extern const char kGpuDeviceID[];
++GPU_EXPORT extern const char kGpuVendorID[];
+ 
+ }  // namespace switches
+ 
+diff -ru gpu/config/gpu_util.cc gpu/config/gpu_util.cc
+--- gpu/config/gpu_util.cc	Sun May 05 13:08:58 2019
++++ gpu/config/gpu_util.cc	Mon May 06 17:48:56 2019
+@@ -710,4 +710,19 @@
+   return GpuSeriesType::kUnknown;
+ }
+ 
++bool GetGpuInfoFromCommandLine(const base::CommandLine& command_line, GPUInfo* gpu_info) {
++  DCHECK(gpu_info);
++
++  if (!command_line.HasSwitch(switches::kGpuVendorID) || !command_line.HasSwitch(switches::kGpuDeviceID))
++    return false;
++  bool success = base::HexStringToUInt(command_line.GetSwitchValueASCII(switches::kGpuVendorID), &gpu_info->gpu.vendor_id);
++  DCHECK(success);
++
++  success = base::HexStringToUInt(command_line.GetSwitchValueASCII(switches::kGpuDeviceID), &gpu_info->gpu.device_id);
++  DCHECK(success);
++
++  gpu_info->gpu.active = true;
++  return true;
++}
++
+ }  // namespace gpu
+diff -ru gpu/config/gpu_util.h gpu/config/gpu_util.h
+--- gpu/config/gpu_util.h	Sun May 05 13:03:59 2019
++++ gpu/config/gpu_util.h	Mon May 06 17:49:10 2019
+@@ -77,6 +77,9 @@
+ GPU_EXPORT GpuSeriesType GetGpuSeriesType(uint32_t vendor_id,
+                                           uint32_t device_id);
+ 
++// select gpu from command line
++GPU_EXPORT bool GetGpuInfoFromCommandLine(const base::CommandLine& command_line, GPUInfo* gpu_info);
++
+ }  // namespace gpu
+ 
+ #endif  // GPU_CONFIG_GPU_UTIL_H_
+diff -ru gpu/ipc/service/gpu_init.cc gpu/ipc/service/gpu_init.cc
+--- gpu/ipc/service/gpu_init.cc	Sun May 05 13:08:58 2019
++++ gpu/ipc/service/gpu_init.cc	Mon May 06 17:49:48 2019
+@@ -117,7 +117,9 @@
+ #if !defined(OS_ANDROID) && !defined(IS_CHROMECAST)
+   needs_more_info = false;
+   if (!PopGPUInfoCache(&gpu_info_)) {
+-    CollectBasicGraphicsInfo(command_line, &gpu_info_);
++    if(!GetGpuInfoFromCommandLine(*command_line, &gpu_info_)) {
++      CollectBasicGraphicsInfo(command_line, &gpu_info_);
++    }
+   }
+ #if defined(OS_WIN)
+   GpuSeriesType gpu_series_type = GetGpuSeriesType(
+@@ -425,7 +427,9 @@
+ #if !defined(IS_CHROMECAST)
+   needs_more_info = false;
+   if (!PopGPUInfoCache(&gpu_info_)) {
+-    CollectBasicGraphicsInfo(command_line, &gpu_info_);
++    if(!GetGpuInfoFromCommandLine(*command_line, &gpu_info_)) {
++      CollectBasicGraphicsInfo(command_line, &gpu_info_);
++    }
+   }
+   if (!PopGpuFeatureInfoCache(&gpu_feature_info_)) {
+     gpu_feature_info_ = ComputeGpuFeatureInfo(gpu_info_, gpu_preferences_,

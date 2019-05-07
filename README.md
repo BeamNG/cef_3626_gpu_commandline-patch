@@ -68,7 +68,7 @@ You need to add your new patch into the list, so it gets used.
 ```
 or, use the file we have provided here (the rest of the patches might have changed, be careful
 ```batch
-xcopy /y patch.cfg build_x64\\chromium\src\cef\patch\
+xcopy /y patch.cfg build_x64\chromium\src\cef\patch\
 ```
 
 4. Build CEF:

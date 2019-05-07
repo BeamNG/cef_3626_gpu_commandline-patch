@@ -1,7 +1,7 @@
-What is this
+What and why
 ============
 
-This is the 3626 branch of the Chromium Embedded Framework (CEF) patched with the ability to select the GPU device that should be used. This is important for games and Off screen rendering as the software shares texture resources and that only works if the same GPU is used.
+This is the 3626 branch of the Chromium Embedded Framework (CEF) patched with the ability to select the GPU device that should be used. This is important for games and off-screen rendering as the software shares texture resources and that only works if the same GPU is used.
 
 We re-added some old command line arguments that were deprecated and removed in Feb 2019.
 

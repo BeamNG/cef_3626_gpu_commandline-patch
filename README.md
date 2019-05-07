@@ -56,8 +56,21 @@ Python27\python automate-git.py --branch=3626 --no-release-tests --no-debug-test
 2. Copy patch file:
 ```batch
 xcopy /y beamng_gpu_cmdline.patch build_x64\chromium\src\cef\patch\patches
+```
+
+3. Adjust the `patch.cfg` file:
+
+You need to add your new patch into the list, so it gets used.
+```json
+  {
+    'name': 'beamng_gpu_cmdline',
+  },
+```
+or, use the file we have provided here (the rest of the patches might have changed, be careful
+```batch
 xcopy /y patch.cfg build_x64\\chromium\src\cef\patch\
 ```
+
 3. Build CEF:
 ```batch
 Python27\python automate-git.py --branch=3626 --no-release-tests --no-debug-tests --no-debug-build  --download-dir=build_x64 --x64-build --force-build

@@ -16,7 +16,7 @@ for example:
 
 
 Integration example using `OnBeforeChildProcessLaunch`:
-```
+```c++
 extern uint32_t g_gpu_device_id; // fill this variable 
 extern uint32_t g_gpu_vendor_id;
 void CefApp::OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) {
@@ -48,17 +48,17 @@ How to compile
 
 This is how we downloaded, patched and built this:
 
-# Download CEF:
-```
+1. Download CEF:
+```batch
 Python27\\python automate-git.py --branch=3626 --no-release-tests --no-debug-tests --no-debug-build --download-dir=build_x64 --x64-build --no-build --no-distrib
 ```
 
-# Copy patch file:
-```
+2. Copy patch file:
+```batch
 xcopy /y beamng_gpu_cmdline.patch build_x64\\chromium\\src\\cef\\patch\\patches
 xcopy /y patch.cfg build_x64\\chromium\\src\\cef\\patch\\
 ```
-# Build CEF:
-```
+3. Build CEF:
+```batch
 Python27\\python automate-git.py --branch=3626 --no-release-tests --no-debug-tests --no-debug-build  --download-dir=build_x64 --x64-build --force-build
 ```

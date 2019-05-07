@@ -62,3 +62,8 @@ xcopy /y patch.cfg build_x64\\chromium\src\cef\patch\
 ```batch
 Python27\python automate-git.py --branch=3626 --no-release-tests --no-debug-tests --no-debug-build  --download-dir=build_x64 --x64-build --force-build
 ```
+
+Binaries
+===============
+
+We provide one set of pre-built binaries for you at https://nextcloud.beamng.com/s/f328nyoHGecEbbG

@@ -58,7 +58,7 @@ Python27\python automate-git.py --branch=3626 --no-release-tests --no-debug-test
 xcopy /y beamng_gpu_cmdline.patch build_x64\chromium\src\cef\patch\patches
 ```
 
-3. Adjust the `patch.cfg` file:
+3. Adjust the `chromium\src\cef\patch\patch.cfg` file:
 
 You need to add your new patch into the list, so it gets used.
 ```
